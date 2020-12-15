@@ -8,7 +8,8 @@ def calc_fitness(model, work_dir):
 
 
 def calc_fitness_parts(vac, vac_inv):
-    i0 = abs(vac[0.0])
+    i0 = abs(vac[min(vac.keys())])
     v0 = abs(vac_inv[min(vac_inv.keys(), key=abs)])
-    fill_factor = abs(max(vac.keys()) * max(vac_inv.keys()) / (v0 * i0))
+    max_power_point = max(vac.items(), key=lambda x: abs(x[0] * x[1]))
+    fill_factor = abs(max_power_point[0] * max_power_point[1] / (i0 * v0))
     return v0, i0, fill_factor
