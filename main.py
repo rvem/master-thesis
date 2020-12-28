@@ -3,7 +3,7 @@ import numpy as np
 from model import BoolFeature, FloatFeature, IntFeature, Model
 from print import *
 from tibercad import run_tibercad
-from util import calc_fitness
+from util import calc_fitness, calc_fitness_parts
 
 from genetic import oneplusone
 
@@ -46,7 +46,7 @@ features = {
 
 model = Model(features)
 
-target_v0 = 0.903
-target_i0 = 11.482 / 1e3
-target_fill_factor = 67.572
-target_fitness = 0.5 * target_v0 + 0.3 * target_i0 + 0.2 * target_fill_factor
+target_v_oc = 0.903
+target_j_sc = 11.482 / 1e3
+target_ff = 67.572 / 100
+target_fitness = calc_fitness(target_v_oc, target_j_sc, target_ff)

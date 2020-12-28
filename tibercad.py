@@ -15,6 +15,6 @@ def run_tibercad(model, work_dir):
     for line in result_contents:
         if line[0] != '#':
             res = [float(x) for x in line.strip().split()]
-            vac[res[0]] = res[2]
-            vac_inv[res[2]] = res[0]
+            vac[res[0]] = res[1]
+            vac_inv[res[1]] = res[0]
     return vac, vac_inv

@@ -1,7 +1,9 @@
+import os
 from model import Model
 
 
 def print_model(model, out_dir):
+    os.makedirs(out_dir, exist_ok=True)
     print_pero_solarcell(model, out_dir)
     print_C60(model, out_dir)
     print_FAPbBr2I(model, out_dir)
