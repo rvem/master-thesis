@@ -10,6 +10,10 @@ from genetic import oneplusone
 features = {
     # Solarcell
     "pedot_density": IntFeature(9e1, (1, 1e5), 1e15),
+    # Add `enabled=False` as a last parameter of the constructor to disable feature
+    # from mutation, e.g.:
+    # "pedot_density": IntFeature(9e1, (1, 1e5), 1e15, enabled=False)
+    # All features are enabled by default
     "fullerene_density": IntFeature(1e2, (1, 1e5), 1e15),
     "perovskite_C": FloatFeature(2e-8, (1e-10, 1e-4)),
     "perovskite_surf_C": FloatFeature(2e-6, (1e-10, 1e-4)),

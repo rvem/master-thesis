@@ -23,10 +23,11 @@ class AbstractFeature(object, metaclass=ABCMeta):
 
 
 class IntFeature(AbstractFeature):
-    def __init__(self, value, value_range, exp=1):
+    def __init__(self, value, value_range, exp=1, enabled=True):
         self.value = value
         self.value_range = value_range
         self.exp = exp
+        self.enabled = enabled
 
     def __choose_random_value__(self):
         return np.random.randint(self.value_range[0], self.value_range[1] + 1)
@@ -39,10 +40,11 @@ class IntFeature(AbstractFeature):
 
 
 class FloatFeature(AbstractFeature):
-    def __init__(self, value, value_range, exp=1):
+    def __init__(self, value, value_range, exp=1, enabled=True):
         self.value = value
         self.value_range = value_range
         self.exp = exp
+        self.enabled = enabled
 
     def __choose_random_value__(self):
         return np.random.uniform(self.value_range[0], self.value_range[1])
@@ -55,8 +57,9 @@ class FloatFeature(AbstractFeature):
 
 
 class BoolFeature(AbstractFeature):
-    def __init__(self, value):
+    def __init__(self, value, enabled=True):
         self.value = value
+        self.enabled = enabled
 
     def __choose_random_value__(self):
         return np.random.choice([True, False])
@@ -77,7 +80,8 @@ class Model:
 
     def mutate(self):
         new_model = copy(self)
-        random_feature = np.random.choice(list(new_model.features.keys()))
+        random_feature = np.random.choice(list(filter(lambda x: new_model.features[x].enabled,
+                                                      new_model.features.keys())))
         print(f"mutate '{random_feature}'")
         print(f"old value '{new_model.features[random_feature].get_value()}'")
         new_model.features[random_feature] = new_model.features[random_feature].mutate()
