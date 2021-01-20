@@ -5,9 +5,9 @@ from print import print_model
 def run_tibercad(model, work_dir):
     os.makedirs(f"{work_dir}", exist_ok=True)
     print_model(model, work_dir)
-    shutil.copy("MAPbBr2I_SC_400nm.msh", os.path.join(work_dir, "MAPbBr2I_SC_400nm.msh"))
+    shutil.copy("MAPbBr2I_SC_400nm.msh", os.path.join(os.getcwd(), work_dir, "MAPbBr2I_SC_400nm.msh"))
     print(f"running tibercad in {work_dir}")
-    subprocess.run(["tibercad", os.path.join(work_dir, "pero_solarcell.tib")], check=True,
+    subprocess.run(["tibercad", os.path.join(os.getcwd(), work_dir, "pero_solarcell.tib")], check=True,
                    stdout=subprocess.DEVNULL)
     vac = {}
     vac_inv = {}

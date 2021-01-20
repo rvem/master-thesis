@@ -164,7 +164,7 @@ Module sweep
   output_format = grace
 }}
 '''
-    with open(os.path.join(out_dir, "pero_solarcell.tib"), 'w') as f:
+    with open(os.path.join(os.getcwd(), out_dir, "pero_solarcell.tib"), 'w') as f:
         f.write(file_contents)
 
 
@@ -186,7 +186,7 @@ permittivity = 4.25
 [mobility/constant]
 mu_max   = ({features["C60_mu_max_0"]}, {features["C60_mu_max_0"]})
 '''
-    with open(os.path.join(out_dir, "C60_.dat"), 'w') as f:
+    with open(os.path.join(os.getcwd(), out_dir, "C60_.dat"), 'w') as f:
         f.write(file_contents)
 
 
@@ -319,7 +319,7 @@ T_4_1_a = 0.6
 T_4_1_b = 0.5
 T_4_1_c = 0.5
 '''
-    with open(os.path.join(out_dir, "FAPbBr2I.dat"), 'w') as f:
+    with open(os.path.join(os.getcwd(), out_dir, "FAPbBr2I.dat"), 'w') as f:
         f.write(file_contents)
 
 
@@ -343,5 +343,5 @@ permittivity = 5
 [mobility/constant] #[2]
 mu_max   = ({features["pedot_mu_max_0"]}, {features["pedot_mu_max_0"]})
 '''
-    with open(os.path.join(out_dir, "pedot_.dat"), 'w') as f:
+    with open(os.path.join(os.getcwd(), out_dir, "pedot_.dat"), 'w') as f:
         f.write(file_contents)
