@@ -7,7 +7,7 @@ def run_tibercad(model, work_dir):
     print_model(model, work_dir)
     shutil.copy("MAPbBr2I_SC_400nm.msh", os.path.join(os.getcwd(), work_dir, "MAPbBr2I_SC_400nm.msh"))
     print(f"running tibercad in {work_dir}")
-    subprocess.run(["tibercad", os.path.join(os.getcwd(), work_dir, "pero_solarcell.tib")], check=True,
+    subprocess.run(["tibercad", "-b", os.path.join(os.getcwd(), work_dir, "pero_solarcell.tib")], check=True,
                    stdout=subprocess.DEVNULL)
     vac = {}
     vac_inv = {}
