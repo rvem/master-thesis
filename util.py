@@ -7,16 +7,28 @@ def calc_fitness_model(model, work_dir):
     return calc_fitness(v_oc, j_sc, ff)
 
 
+def calc_fitness_model_3d(model, work_dir):
+    vac, vac_inv = run_tibercad(model, work_dir)
+    v_oc, j_sc, ff = calc_fitness_parts(vac, vac_inv)
+    return calc_fitness_3d(v_oc, j_sc, ff)
+
+
+v_oc_max = 1.683
+j_sc_max = 14.59 / 1e3
+ff_max = 92.2 / 1e2
+v_oc_weight = 1/3
+j_sc_weight = 1/3
+ff_weight = 1/3
+
+
 def calc_fitness(v_oc, j_sc, ff):
-    v_oc_max = 1.683
-    j_sc_max = 14.59 / 1e3
-    ff_max = 92.2 / 1e2
-    v_oc_weight = 1/3
-    j_sc_weight = 1/3
-    ff_weight = 1/3
     fitness = v_oc_weight * v_oc / v_oc_max + j_sc_weight * j_sc / j_sc_max + \
         ff_weight * ff / ff_max
     return fitness
+
+
+def calc_fitness_3d(v_oc, j_sc, ff):
+    return [v_oc / v_oc_max, j_sc / j_sc_max, ff / ff_max]
 
 
 def calc_fitness_parts(vac, vac_inv):

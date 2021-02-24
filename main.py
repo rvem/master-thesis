@@ -5,7 +5,7 @@ from print import *
 from tibercad import run_tibercad
 from util import calc_fitness, calc_fitness_parts
 
-from genetic import oneplusone
+from genetic import oneplusone, semo
 
 features = {
     # Solarcell
@@ -54,3 +54,4 @@ target_v_oc = 0.903
 target_j_sc = 11.482 / 1e3
 target_ff = 67.572 / 100
 target_fitness = calc_fitness(target_v_oc, target_j_sc, target_ff)
+target_values = (target_v_oc, target_j_sc, target_ff)
