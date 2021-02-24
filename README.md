@@ -26,10 +26,15 @@ res = oneplusone(model, target_fitness)
 
 Многокритериальная оптимизация:
 ```
-res_front = semo(model, target_fitnesses)
+res_front = semo(model, target_values)
 ```
 
 `res_front` будет содержать массив моделей, которые находились в последнем паретофронте.
+
+```
+for i, res in enumerate(res_front):
+    print(model, f"./result-{i}")
+```
 
 Обратите внимание, что для запуска необходимо, чтобы `tibercad` был в `PATH`, либо необходимо
 руками указать путь до бинарника `tibercad` в модуле [`tibercad.py`](./tibercad.py) в первом аргументе
