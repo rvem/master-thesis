@@ -4,7 +4,7 @@ import numpy as np
 import pygmo as pg
 
 from util import calc_fitness_model, calc_fitness_model_3d
-
+from print import print_model
 
 EPS = 1e-6
 MAX_IT = 100
@@ -81,8 +81,25 @@ def calc_target_difference(model_values, target_values):
     return res
 
 
+def print_front(front, epoch, seed):
+    for i, front_elem in enumerate(front):
+        model = front_elem[1]
+        print_model(model, os.path.join(os.getcwd(), f"seed{seed}",
+                                        f"epoch{epoch}", f"model{i}"))
+
+
+def log_epoch(front, log_file, epoch, seed):
+    with open(log_file, 'a') as f:
+        f.write(f"Epoch {epoch}\n")
+        for i, front_elem in enumerate(front):
+            scores = front_elem[0]
+            f.write(f"{scores} seed{seed}/epoch{epoch}/model{i}\n")
+        f.write("\n")
+
+
 def semo(initial_model, target_values):
     current_seed = np.random.get_state()[1][0]
+    log_file = f"semo-{current_seed}.log"
     initial_value = calc_fitness_model_3d(initial_model,
                                             os.path.join(os.getcwd(), f"seed{current_seed}", "epoch0_ind0"))
     front = [(calc_target_difference(initial_value, target_values), initial_model)]
@@ -103,6 +120,8 @@ def semo(initial_model, target_values):
                     new_front.append(front[i])
             new_hv = calc_hv(new_front)
             print(f"Epoch {it}, hypervolume = {new_hv}")
+            print_front(front, it, current_seed)
+            log_epoch(front, log_file, it, current_seed)
             if new_hv > hv:
                 front = new_front
                 hv = new_hv
