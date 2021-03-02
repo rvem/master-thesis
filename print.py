@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from model import Model
 
 
@@ -8,6 +8,7 @@ def print_model(model, out_dir):
     print_C60(model, out_dir)
     print_FAPbBr2I(model, out_dir)
     print_pedot(model, out_dir)
+    shutil.copy("MAPbBr2I_SC_400nm.msh", os.path.join(out_dir, "MAPbBr2I_SC_400nm.msh"))
 
 def print_pero_solarcell(model, out_dir):
     features = model.get_values()
