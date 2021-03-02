@@ -88,9 +88,9 @@ def print_front(front, epoch, seed):
                                         f"epoch{epoch}", f"model{i}"))
 
 
-def log_epoch(front, log_file, epoch, seed):
+def log_epoch(front, hv, log_file, epoch, seed):
     with open(log_file, 'a') as f:
-        f.write(f"Epoch {epoch}\n")
+        f.write(f"Epoch {epoch}, hypervolume: {hv}\n")
         for i, front_elem in enumerate(front):
             scores = front_elem[0]
             f.write(f"{scores} seed{seed}/epoch{epoch}/model{i}\n")
@@ -120,8 +120,8 @@ def semo(initial_model, target_values):
                     new_front.append(front[i])
             new_hv = calc_hv(new_front)
             print(f"Epoch {it}, hypervolume = {new_hv}")
-            print_front(front, it, current_seed)
-            log_epoch(front, log_file, it, current_seed)
+            print_front(new_front, it, current_seed)
+            log_epoch(new_front, new_hv, log_file, it, current_seed)
             if new_hv > hv:
                 front = new_front
                 hv = new_hv
