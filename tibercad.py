@@ -11,6 +11,7 @@ def run_tibercad(model, work_dir):
     vac = {}
     vac_inv = {}
     result_contents = open(os.path.join(work_dir, "result", "reverse_dd.dat"), 'r').readlines()
+    model.result = result_contents
     for line in result_contents:
         if line[0] != '#':
             res = [float(x) for x in line.strip().split()]

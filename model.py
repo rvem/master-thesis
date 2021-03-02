@@ -74,6 +74,7 @@ class BoolFeature(AbstractFeature):
 class Model:
     def __init__(self, features):
         self.features = features
+        self.result = None
 
     def __copy__(self):
         return Model(deepcopy(self.features))

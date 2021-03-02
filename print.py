@@ -9,6 +9,10 @@ def print_model(model, out_dir):
     print_FAPbBr2I(model, out_dir)
     print_pedot(model, out_dir)
     shutil.copy("MAPbBr2I_SC_400nm.msh", os.path.join(out_dir, "MAPbBr2I_SC_400nm.msh"))
+    if model.result is not None:
+        os.makedirs(os.path.join(out_dir, "result"), exist_ok=True)
+        with open(os.path.join(out_dir, "result", "reverse_dd.dat"), "w") as f:
+            f.writelines(model.result)
 
 def print_pero_solarcell(model, out_dir):
     features = model.get_values()
