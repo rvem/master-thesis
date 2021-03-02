@@ -20,24 +20,26 @@ def oneplusone(initial_model, target_fitness):
     print(f"Target fitness,: {target_fitness}")
     it = 0
     while (abs(current_fitness - target_fitness) > EPS and it < MAX_IT):
-        it += 1
-        new_model = current_model.mutate()
-        start = time()
-        process_model = True
         try:
-            new_fitness = calc_fitness_model(new_model,
-                                             os.path.join(os.getcwd(), f"seed{current_seed}", f"epoch{it}"))
-        except subprocess.CalledProcessError as _:
-            print("tibercad suddenly failed:(")
-            process_model = False
-        finish = time()
-        if process_model:
-            print(f"Epoch {it}, fitness: {new_fitness}, time to calculate {finish - start}")
-            if abs(new_fitness - target_fitness) < \
-               abs(current_fitness - target_fitness):
-                current_fitness = new_fitness
-                current_model = new_model
-
+            it += 1
+            new_model = current_model.mutate()
+            start = time()
+            process_model = True
+            try:
+                new_fitness = calc_fitness_model(new_model,
+                                                 os.path.join(os.getcwd(), f"seed{current_seed}", f"epoch{it}"))
+            except subprocess.CalledProcessError as _:
+                print("tibercad suddenly failed:(")
+                process_model = False
+            finish = time()
+            if process_model:
+                print(f"Epoch {it}, fitness: {new_fitness}, time to calculate {finish - start}")
+                if abs(new_fitness - target_fitness) < abs(current_fitness - target_fitness):
+                    current_fitness = new_fitness
+                    current_model = new_model
+        except KeyboardInterrupt:
+            print("Interrupting 1+1, returning current model")
+            return current_model
     return current_model
 
 
@@ -75,7 +77,7 @@ def calc_hv(front):
 def calc_target_difference(model_values, target_values):
     res = []
     for i in range(3):
-        res.append(abs(model_values[i] - target_values[i]))
+        res.append(round(abs(model_values[i] - target_values[i]), 6))
     return res
 
 
@@ -90,25 +92,30 @@ def semo(initial_model, target_values):
     trampling_steps = 0
     print(f"Initial hypervolume: {hv}")
     while not terminate:
-        it += 1
-        new_subj_values, new_subj = mutate_until_success(front, it, current_seed)
-        front.append((calc_target_difference(new_subj_values, target_values), new_subj))
-        mask = get_dominance_mask(front)
-        new_front = []
-        for i in range(len(mask)):
-            if mask[i]:
-                new_front.append(front[i])
-        new_hv = calc_hv(new_front)
-        print(f"Epoch {it}, hypervolume = {new_hv}")
-        if new_hv > hv:
-            front = new_front
-            hv = new_hv
-            print(f"Front updated, new front size: {len(front)}, new front fitnesses:")
-            print(", ".join([x[0].__str__() for x in front]))
-            trampling_steps = 0
-        else:
-            trampling_steps += 1
-            if trampling_steps > MAX_TRAMPLING_STEPS:
-                terminate = True
+        try:
+            it += 1
+            new_subj_values, new_subj = mutate_until_success(front, it, current_seed)
+            front.append((calc_target_difference(new_subj_values, target_values), new_subj))
+            mask = get_dominance_mask(front)
+            new_front = []
+            for i in range(len(mask)):
+                if mask[i]:
+                    new_front.append(front[i])
+            new_hv = calc_hv(new_front)
+            print(f"Epoch {it}, hypervolume = {new_hv}")
+            if new_hv > hv:
+                front = new_front
+                hv = new_hv
+                print(f"Front updated, new front size: {len(front)}, new front fitnesses:")
+                print(", ".join([x[0].__str__() for x in front]))
+                trampling_steps = 0
+            else:
+                trampling_steps += 1
+                if trampling_steps > MAX_TRAMPLING_STEPS:
+                    terminate = True
+        except KeyboardInterrupt:
+            print("Interrupting SEMO, returning current pareto-front")
+            res_subjects = [x[1] for x in front]
+            return res_subjects
     res_subjects = [x[1] for x in front]
     return res_subjects

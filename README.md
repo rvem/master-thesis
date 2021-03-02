@@ -33,7 +33,7 @@ res_front = semo(model, target_values)
 
 ```
 for i, res in enumerate(res_front):
-    print(model, f"./result-{i}")
+    print_model(res, f"./result-{i}")
 ```
 
 Обратите внимание, что для запуска необходимо, чтобы `tibercad` был в `PATH`, либо необходимо
