@@ -2,11 +2,13 @@ import os, subprocess
 from time import time
 import numpy as np
 import pygmo as pg
+from copy import copy, deepcopy
 
-from util import calc_fitness_model, calc_fitness_model_3d
+from util import calc_fitness_model, calc_fitness_model_3d, calc_fitness_3d
 from print import print_model
 
 EPS = 1e-6
+HV_EPS = 1e-6
 MAX_IT = 100
 MAX_TRAMPLING_STEPS = 20
 
@@ -63,7 +65,7 @@ def get_dominance_mask(front):
     is_efficient = np.ones(costs.shape[0], dtype = bool)
     for i, c in enumerate(costs):
         if is_efficient[i]:
-            is_efficient[is_efficient] = np.any(costs[is_efficient]<c, axis=1)
+            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)
             is_efficient[i] = True
     return is_efficient
 
@@ -76,8 +78,9 @@ def calc_hv(front):
 
 def calc_target_difference(model_values, target_values):
     res = []
+    tmp = calc_fitness_3d(target_values[0], target_values[1], target_values[2])
     for i in range(3):
-        res.append(round(abs(model_values[i] - target_values[i]), 6))
+        res.append(round(abs(model_values[i] - tmp[i]), 6))
     return res
 
 
@@ -112,21 +115,22 @@ def semo(initial_model, target_values):
         try:
             it += 1
             new_subj_values, new_subj = mutate_until_success(front, it, current_seed)
-            front.append((calc_target_difference(new_subj_values, target_values), new_subj))
-            mask = get_dominance_mask(front)
+            extended_front = deepcopy(front)
+            extended_front.append((calc_target_difference(new_subj_values, target_values), new_subj))
+            mask = get_dominance_mask(extended_front)
             new_front = []
             for i in range(len(mask)):
                 if mask[i]:
-                    new_front.append(front[i])
+                    new_front.append(extended_front[i])
             new_hv = calc_hv(new_front)
             print(f"Epoch {it}, hypervolume = {new_hv}")
             print_front(new_front, it, current_seed)
             log_epoch(new_front, new_hv, log_file, it, current_seed)
-            if new_hv > hv:
+            if abs(new_hv - hv) > HV_EPS:
                 front = new_front
                 hv = new_hv
-                print(f"Front updated, new front size: {len(front)}, new front fitnesses:")
-                print(", ".join([x[0].__str__() for x in front]))
+                print(f"Front updated, new front size: {len(new_front)}, new front fitnesses:")
+                print(", ".join([x[0].__str__() for x in new_front]))
                 trampling_steps = 0
             else:
                 trampling_steps += 1
