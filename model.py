@@ -71,13 +71,24 @@ class BoolFeature(AbstractFeature):
         return self.value
 
 
+class Mutation:
+    def __init__(self, feature_name, old_value, new_value):
+        self.feature_name = feature_name
+        self.old_value = old_value
+        self.new_value = new_value
+
+    def __str__(self):
+        return f"{self.feature_name}\nold value: {self.old_value}\nnew_value: {self.new_value}"
+
+
 class Model:
-    def __init__(self, features):
+    def __init__(self, features=[], mutations=[]):
         self.features = features
         self.result = None
+        self.mutations = mutations
 
     def __copy__(self):
-        return Model(deepcopy(self.features))
+        return Model(deepcopy(self.features), deepcopy(self.mutations))
 
     def mutate(self):
         new_model = copy(self)
@@ -87,6 +98,8 @@ class Model:
         print(f"old value '{new_model.features[random_feature].get_value()}'")
         new_model.features[random_feature] = new_model.features[random_feature].mutate()
         print(f"new value '{new_model.features[random_feature].get_value()}'")
+        new_model.mutations.append(
+            Mutation(random_feature, {self.features[random_feature].get_value()}, {new_model.features[random_feature].get_value()}))
         return new_model
 
     def get_values(self):

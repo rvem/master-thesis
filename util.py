@@ -37,3 +37,15 @@ def calc_fitness_parts(vac, vac_inv):
     max_power_point = max(vac.items(), key=lambda x: x[0] * x[1])
     fill_factor = abs(max_power_point[0] * max_power_point[1] / (i0 * v0))
     return v0, i0, fill_factor
+
+def print_mutations_table(models, out):
+    contents = ""
+    for i, model in enumerate(models):
+        contents += f"Model{i}\n"
+        for j, mutation in enumerate(model.mutations):
+            contents += f"Mutation {j}\n"
+            contents += mutation.__str__()
+            contents += "\n"
+        contents += "\n"
+    with open(out, 'w') as f:
+        f.write(contents)
